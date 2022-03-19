@@ -10,46 +10,47 @@ package zad1;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListCreator <T extends List<T>>{ // Uwaga: klasa musi być sparametrtyzowana
-    static List<?> createdList;
-    List<?> valuesToChange;
-    //public static List<?> collectFrom(List <?> src){
-    public static ListCreator<?> collectFrom(List <?> src){
-        createdList = src;
-        return super;
+public class ListCreator <T>{
+    public List<T> createdList;
+    public ListCreator(List<T> list){
+        createdList = list;
     }
 
-    public ListCreator<T> when(Selector<?> selector){
+    public static <T>ListCreator<T> collectFrom(List <T> src){
+        ListCreator<T> listCreatorToReturn = new ListCreator<T>(src);
+        return listCreatorToReturn;
+    }
+
+    public <T>ListCreator<T> when(Selector<T> selector){
        List<T> listOfProperValues = new ArrayList<>();
        for(int i=0; i<createdList.size(); i++){
            if(selector.select(createdList.get(i))){
                listOfProperValues.add((T) createdList.get(i));
-           }else{
-               listOfProperValues = null;
            }
-           this.valuesToChange = listOfProperValues;
        }
-     return this;
+        List<T> toReturn = new ArrayList<T>(listOfProperValues);
+     return new ListCreator<T>(toReturn);
     }
 
-    public List<Integer> mapEvery(Mapper<?> mapper){
+    public <T2> List<T2> mapEvery(Mapper<T2, T> mapper){
         String stringToPrint = "";
-        List<Integer> listToReturn = new ArrayList<>();
-        for (int i =0; i < this.valuesToChange.size(); i++){
-            if(i  == 0){
-                stringToPrint = "[" + mapper.map( valuesToChange.get(i));
-                listToReturn.add((Integer) valuesToChange.get(i));
+        List<T2> listToReturn = new ArrayList<>();
 
-            }else if (i == valuesToChange.size()-1){
-                stringToPrint += "," + valuesToChange.get(i) + "]";
-                listToReturn.add((Integer) valuesToChange.get(i));
+        for (int i =0; i < this.createdList.size(); i++){
+            if(i  == 0){
+                stringToPrint = "[" + mapper.map((T) createdList.get(i));
+                listToReturn.add( mapper.map((T) createdList.get(i)));
+
+            }else if (i == createdList.size()-1){
+                stringToPrint += "," + mapper.map((T) createdList.get(i)) + "]";
+                listToReturn.add( mapper.map((T) createdList.get(i)));
             }
             else{
-                stringToPrint += "," + valuesToChange.get(i);
-                listToReturn.add((Integer) valuesToChange.get(i));
+                stringToPrint += "," + mapper.map((T) createdList.get(i));
+                listToReturn.add((mapper.map((T) createdList.get(i))));
             }
         }
-        System.out.println(stringToPrint);
+        //                           System.out.println(stringToPrint);
         return listToReturn;
     }
 }

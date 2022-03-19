@@ -10,7 +10,7 @@ package zad1;
 
 import java.util.*;
 
-import static zad1.ListCreator.collectFrom;
+//import static zad1.ListCreator.collectFrom;
 
 public class Main {
     public Main() {
@@ -22,7 +22,7 @@ public class Main {
     }
 
     public List<Integer> test1(List<Integer> src) {
-        Selector<?> sel = new Selector(){
+        Selector<Integer> sel = new Selector<Integer>(){
                 @Override
                 public boolean select(Object o) {
                     int temp = (int) o;
@@ -32,20 +32,17 @@ public class Main {
                     return false;
                 }
             };
-        Mapper<?> map = new Mapper(){
-
+        Mapper<Integer, Integer> map = new Mapper<Integer, Integer>(){
             @Override
-            public int map(Object o) {
-                int temp = (int) o;
-                return temp+10;
-
+            public Integer map(Integer arg) {
+                return arg+10;
             }
         };
-        return collectFrom(src).when(sel).mapEvery(map);
+        return ListCreator.collectFrom(src).when(sel).mapEvery(map);
     }
 
     public List<Integer> test2(List<String> src) {
-        Selector<?> sel = new Selector(){
+        Selector<String> sel = new Selector<String>(){
             @Override
             public boolean select(Object o) {
                 String temp = (String) o;
@@ -55,16 +52,14 @@ public class Main {
                     return false;
             }
         };
-                Mapper<?> map = new Mapper(){
+                Mapper<Integer, String> map = new Mapper<Integer, String>(){
 
                     @Override
-                    public int map(Object o) {
-                        String temp = (String) o;
-                        return temp.length()+10;
-
+                    public Integer map(String arg) {
+                        return arg.length()+10;
                     }
                 };
-        return collectFrom(src).when(sel).mapEvery(map);
+        return ListCreator.collectFrom(src).when(sel).mapEvery(map);
     }
 
     public static void main(String[] args) {
